@@ -14,10 +14,8 @@ Inputs:
 Outputs:
 	OUT_DATA_BUS = LEDR[9:0]
 	DHEX [2:0] = HEX2:0 //ignore DHEX[0], DHEX[1], and DHEX[2] in pin assign table
-	THEX = HEX5
+	THEX = timestep HEX5
 	Done = the dot on HEX5 = PIN_L19
-	
-	
 	
 */
 
@@ -37,7 +35,7 @@ module Project_2_CSC244(
 	//Data bus
 	logic [9:0] BUS;
 	
-	/*Debouncer quick copy:
+	/*Debouncer - Quick copy:
 		debouncer (.A(), .A_noisy(), .CLK50M());
 	*/
 	logic CLKDb; //CLK after debounced
@@ -45,8 +43,11 @@ module Project_2_CSC244(
 
 	logic PKdb; //PKdb -> peek
 	debouncer PKDebouncer(.A(PKdb), .A_noisy(PKb), .CLK50M(CLK50MHz));
-
 	
 	
+	/* Output module - Quick copy:
+		OutputLogic(.LED_B() , .DHEX(), .THEX(), .LED_D(), .BUS(), .REG(), .TIME(), .PEEKb(), .DONE());
+	*/
+	OutputLogic(.LED_B(OUT_DATA_BUS) , .DHEX(DHEX), .THEX(THEX), .LED_D(), .BUS(BUS), .REG(), .TIME(), .PEEKb(PKdb), .DONE(Done));
 
 endmodule
