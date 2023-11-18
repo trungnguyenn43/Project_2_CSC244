@@ -22,7 +22,15 @@ module upcount2(
 	output logic [1:0] CNT
 );
 
+//MAXIMUM STEP WITH 2 BITS = 4
 
+	always_ff@(negedge(CLKb))
+	begin
+		if(CLR)
+			CNT <= 0;
+		else
+			CNT <= CNT + 1;
+	end
 
 
 
