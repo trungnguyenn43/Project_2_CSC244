@@ -33,7 +33,16 @@ output logic [9:0] Q0 , Q1
 	//logic [3:0] Rout;
 	always_comb
 	begin
-		case ({ENR, RDA})
+		case ({ENR, RDA0})
+			000,
+			001,
+			010,
+			011: Rout = 'h0;
+	end
+
+	always_comb
+	begin
+		case ({ENR, RDA1})
 			000,
 			001,
 			010,
