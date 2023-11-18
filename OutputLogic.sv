@@ -19,7 +19,7 @@ Out:
 	LED_D = dot on HEX5 to show that the operation is done
 	
 Quick copy:
-upcount2(.CNT() , .CLR(), .CLKb());
+OutputLogic(.LED_B() , .DHEX(), .THEX(), .LED_D(), .BUS(), .REG(), .TIME(), .PEEKb(), .DONE());
 */
 
 module OutputLogic(
@@ -37,9 +37,19 @@ module OutputLogic(
 
 	
 	
+	always_comb
+	begin
+		if()
+		
+		
+		
+	end
 	
 	
-
-
+	
+	seven_seg digit0(.out_sig(DHEX[0]) , .a());
+	seven_seg digit1(.out_sig(DHEX[1]) , .a());
+	seven_seg Timestep(.out_sig(THEX) , .a(TIME));
+	
 
 endmodule
