@@ -19,7 +19,7 @@ Out:
 	[9:0] Q1 = data bus out signals 
 
 Quick copy:
-registerFile(.D(), .ENW() , .ENR0() , .ENR1() , .CLKb(), .WRA() , .RDA0() , .RDA1());
+registerFile(.D(), .ENW() , .ENR0() , .ENR1() , .CLKb(), .WRA() , .RDA0() , .RDA1() , .Q0() , .Q1());
 */
 
 module registerFile (
