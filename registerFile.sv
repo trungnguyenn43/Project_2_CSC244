@@ -30,25 +30,44 @@ output logic [9:0] Q0 , Q1
 );
 
 	//ENR1 IS ALWAYS 1'B1
-	//logic [3:0] Rout;
-	always_comb
+	
+	logic [9:0] R0, R1, R2, R3;
+	
+	//reading data and save to register
+	always_ff@(negedge(CLKb))
 	begin
-		case ({ENR, RDA0})
-			000,
-			001,
-			010,
-			011: Rout = 'h0;
-	end
-
-	always_comb
-	begin
-		case ({ENR, RDA1})
-			000,
-			001,
-			010,
-			011: Rout = 'h0;
+		if(ENW) //if write is trigger
+		begin
+			case(WRA)
+				2'b00: R0 <= D;
+				2'b01: R1 <= D;
+				2'b10: R2 <= D;
+				2'b11: R3 <= D;
+			endcase
+		end
+		else
+			WRA = 0;
 	end
 	
+	
+	always_comb
+	begin
+		
+		case({ENR0, RDA0}) //to Q0
+			2'b00: Q0 = R0;
+			2'b01: Q0 = R1;
+			2'b10: Q0 = R2;
+			2'b11: Q0 = R3;
+			default: Q0 = 0;
+		endcase
+		
+		case({ENR1, RDA1}) //to Q1
+			2'b00: Q1 = R0;
+			2'b01: Q1 = R1;
+			2'b10: Q1 = R2;
+			2'b11: Q1 = R3;
+		endcase
+	end
 	
 
 endmodule
