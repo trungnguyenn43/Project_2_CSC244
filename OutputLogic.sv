@@ -53,8 +53,8 @@ module OutputLogic(
 	seven_seg digit0(.s(DHEX0) , .a(outLogic[3:0]));
 	seven_seg digit1(.s(DHEX1) , .a(outLogic[7:4]));
 	seven_seg digit2(.s(DHEX2) , .a({2'b00, outLogic[9:8]}));
-	seven_seg Timestep(.s(THEX) , .a({2'b00, TIME}));
+	seven_seg Timestep(.s(THEX[6:0]) , .a({2'b00, TIME}));
 	
-	assign THEX [7] = DONE;
+	assign THEX [7] = ~DONE;
 
 endmodule
