@@ -43,63 +43,51 @@ module ALU#(
 	
 	logic [N-1:0] A; //A
 	logic [N-1:0] B; //B
-	logic [N-1:0] tempRes; //Temp ressult
-	logic [9:0] I;
-	assign I = OP[5:0];
+	logic [N-1:0] G; //Temp ressult
 	
-	always_ff@(posedge(Ain))
+	always_ff@(negedge(Ain))
 		A <= OP; //store A
 		
-	always_ff@(posedge(Gin))
-		B <= OP; //store B
-  
-	logic [N-1:0] flipResult; //flip result 
-	logic invA = ~A;
-	
-	fulladder sum(.A(invA), .B(1), .Co(0), .S(flipResult));
-	
 	always_comb begin
-	
-	if(OP[9:8] == 2'b00)
+	if(Gin)
 		begin
-			//ALU cases mux for OP 00
-			case(FN)
+		//ALU cases mux for OP 00
+		case(FN)
+		
+			ADD: G = A + B;
+			SUB: G = A - B;
+			INV: G = (~A) + 1;
+			FLP: G = ~A;
+			AND: G = A & B;
+			OR: G = A | B;
+			XOR: G = A ^ B;
+			LSL: G = A << B;
+			LSR: G = A >> B;
+			ASR: G = A >>> B;
 			
-				ADD: tempRes = A + B;
-				SUB: tempRes = A - B;
-				INV: tempRes = ~A;
-				FLP: tempRes = flipResult;
-				AND: tempRes = A & B; //andOrResult;
-				OR: tempRes = A | B;
-				XOR: tempRes = A ^ B;
-				LSL: tempRes = A << B;
-				LSR: tempRes = A >> B;
-				ASR: tempRes = A >>> B;
-				
-				default: 
-					tempRes = 10'd0;
-			endcase
+			default: 
+				G = 10'd0;
+		endcase
+			
+			
+		if(OP[9:8] == 2'b10)
+			begin
+				G = A + OP[5:0];
 			end
 			
-	else if(OP[9:8] == 2'b10)
-		begin
-			tempRes = A + I;
-		end
-		
-	else if(OP[9:8] == 2'b11)
-		begin
-			tempRes = A - I;
-		end
-		
-	else
-		tempRes = 10'd0;
+		else if(OP[9:8] == 2'b11)
+			begin
+				G = A - OP[5:0];
+			end
 			
+		else
+			G = 10'd0;
+		end
 	end
 	
-	
-	always_ff@(negedge (CLKb)) //send out result
+	always_comb //send out result
 		if(Gout)
-			RES <= tempRes;
+			RES <= G;
 		else
 			RES <= 10'd0;
 	
