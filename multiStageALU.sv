@@ -43,47 +43,45 @@ module MultiStageALU#(
 	
 	logic [N-1:0] A; //A
 	logic [N-1:0] B; //B
-	logic [N-1:0] G; //Temp ressult
+	logic [N-1:0] G; //ressult
+	logic [N-1:0] temp; //temp ressult
+	logic [N-1:0] IMM_VAL;
+	assign IMM_VAL[5:0] = OP[5:0];
 	
-	always_ff@(negedge(Ain))
-		A <= OP; //store A
-		
-	always_comb begin
-	if(Gin)
-		begin
-		//ALU cases mux for OP 00
-		case(FN)
-		
-			ADD: G = A + B;
-			SUB: G = A - B;
-			INV: G = (~A) + 1;
-			FLP: G = ~A;
-			AND: G = A & B;
-			OR: G = A | B;
-			XOR: G = A ^ B;
-			LSL: G = A << B;
-			LSR: G = A >> B;
-			ASR: G = A >>> B;
-			
-			default: 
-				G = 10'd0;
-		endcase
-			
-			
-		if(OP[9:8] == 2'b10)
-			begin
-				G = A + OP[5:0];
-			end
-			
-		else if(OP[9:8] == 2'b11)
-			begin
-				G = A - OP[5:0];
-			end
-			
+	always_ff@(negedge(CLKb))
+		if(Ain)
+			A <= OP; //store A
 		else
-			G = 10'd0;
-		end
+			A <= 0;
+		
+	always_comb 
+	begin
+		//ALU cases mux for OP 00
+		case({OP[N-1:N-2], FN})
+		
+			{2'b00, ADD}: temp = A + B;
+			{2'b00, SUB}: temp = A - B;
+			{2'b00, INV}: temp = (~A) + 1;
+			{2'b00, FLP}: temp = ~A;
+			{2'b00, AND}: temp = A & B;
+			{2'b00, OR}: temp = A | B;
+			{2'b00, XOR}: temp = A ^ B;
+			{2'b00, LSL}: temp = A << B;
+			{2'b00, LSR}: temp = A >> B;
+			{2'b00, ASR}: temp = A >>> B;
+			{2'b10, 1'b?}: temp = A + OP[5:0];
+			{2'b11, 1'b?}: temp = A - OP[5:0];
+			default: temp = 10'd0;
+				
+		endcase		
 	end
+	
+	
+	always_ff@(negedge(CLKb))
+		if(Gin)
+			G <= temp;
+		else
+			G = G;
 	
 	always_comb //send out result
 		if(Gout)
