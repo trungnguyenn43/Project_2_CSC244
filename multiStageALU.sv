@@ -16,7 +16,7 @@ Out:
 	[N-1:0] Q = data bus out signals 
 
 Quick copy:
-instructionReg(.Q() , .D(), .CLKb(), .E());
+ALU(.RES(), .Ain(), .Gin(), .Gout(), .CLKb(), .FN(), .OP());
 */
 
 module ALU#(
