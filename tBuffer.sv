@@ -7,9 +7,9 @@ module tBuffer(
 	always_comb
 	begin
 		if(E)
-			Q= D;
+			Q = D;
 		else
-			Q= 10'bz;
+			Q = 10'bz;
 	end
 
 
