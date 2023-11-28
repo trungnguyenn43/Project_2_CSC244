@@ -41,30 +41,67 @@ module ALU#(
 	parameter LSR = 4'b1010;
 	parameter ASR = 4'b1011;
 	
+	logic [N-1:0] A; //A
+	logic [N-1:0] B; //B
+	logic [N-1:0] tempRes; //Temp ressult
+	logic [9:0] I;
+	assign I = OP[5:0];
+	
+	always_ff@(posedge(Ain))
+		A <= OP; //store A
+		
+	always_ff@(posedge(Gin))
+		B <= OP; //store B
   
-  logic [N-1:0] addSubResult; //temp addOrSub 
-
-  fulladder sum(.A(A), .B(B), .Co(ALUControl[0]), .S(addSubResult));
+	logic [N-1:0] flipResult; //flip result 
+	logic invA = ~A;
 	
-	
+	fulladder sum(.A(invA), .B(1), .Co(0), .S(flipResult));
 	
 	always_comb begin
-		//ALU cases mux
-		case(FN)
-		
-			ADD: RES = addSubResult;
-			SUB: RES = addSubResult;
-			INV: RES = ~B;
-			FLP: RES = ~B;
-			AND: RES = A & B; //andOrResult;
-			OR: RES = A | B;
-			XOR: RES = A ^ B;
-			LSL: 
-			LSR:
-			ASR: 
+	
+	if(OP[9:8] == 2'b00)
+		begin
+			//ALU cases mux for OP 00
+			case(FN)
 			
-		endcase
+				ADD: tempRes = A + B;
+				SUB: tempRes = A - B;
+				INV: tempRes = ~A;
+				FLP: tempRes = flipResult;
+				AND: tempRes = A & B; //andOrResult;
+				OR: tempRes = A | B;
+				XOR: tempRes = A ^ B;
+				LSL: tempRes = A << B;
+				LSR: tempRes = A >> B;
+				ASR: tempRes = A >>> B;
+				
+				default: 
+					tempRes = 10'd0;
+			endcase
+			end
+			
+	else if(OP[9:8] == 2'b10)
+		begin
+			tempRes = A + I;
+		end
+		
+	else if(OP[9:8] == 2'b11)
+		begin
+			tempRes = A - I;
+		end
+		
+	else
+		tempRes = 10'd0;
+			
 	end
+	
+	
+	always_ff@(negedge (CLKb)) //send out result
+		if(Gout)
+			RES <= tempRes;
+		else
+			RES <= 10'd0;
 	
 	
 	
