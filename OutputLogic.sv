@@ -3,7 +3,7 @@ Module name: outputlogic
 Description: output logic for the project
 By: 
 Created: 11/17/2023
-Updated:
+Updated: 11/27/2023
 
 In: 
 	[9:0] BUS = Data bus signal 
@@ -25,31 +25,36 @@ OutputLogic(.LED_B() , .DHEX(), .THEX(), .LED_D(), .BUS(), .REG(), .TIME(), .PEE
 module OutputLogic(
 	
 	input logic [9:0] BUS, REG,
-	input logic TIME,
+	input logic [1:0] TIME,
 	input logic PEEKb,
 	input logic DONE,
 	
 	output logic [9:0] LED_B,
-	output logic [6:0] DHEX [2:0], THEX,
-	output logic LED_D
-	
+	output logic [6:0] DHEX0, DHEX1, DHEX2,
+	output logic [7:0], THEX
 );
 
+	logic [9:0] outLogic;
 	
+	assign LED_B= BUS;
 	
 	always_comb
 	begin
-		if()
-		
-		
-		
+		if(PEEKb)
+		begin
+			outLogic= BUS;
+		end
+		else
+		begin
+			outLogic= REG;
+		end
 	end
 	
+	seven_seg digit0(.s(DHEX0) , .a(outLogic[3:0]));
+	seven_seg digit1(.s(DHEX1) , .a(outLogic[7:4]));
+	seven_seg digit2(.s(DHEX2) , .a({2'b00, outLogic[9:8])});
+	seven_seg Timestep(.s(THEX) , .a({2'b00, TIME));
 	
-	
-	seven_seg digit0(.out_sig(DHEX[0]) , .a());
-	seven_seg digit1(.out_sig(DHEX[1]) , .a());
-	seven_seg Timestep(.out_sig(THEX) , .a(TIME));
-	
+	assign THEX [7] = DONE;
 
 endmodule
