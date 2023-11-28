@@ -23,30 +23,23 @@ registerFile(.D(), .ENW() , .ENR0() , .ENR1() , .CLKb(), .WRA() , .RDA0() , .RDA
 */
 
 module registerFile (
-input logic [9:0] D ,
-input logic ENW , ENR0 , ENR1 , CLKb ,
-input logic [1:0] WRA , RDA0 , RDA1 ,
-output logic [9:0] Q0 , Q1
+		input logic [9:0] D ,
+		input logic ENW , ENR0 , ENR1 , CLKb ,
+		input logic [1:0] WRA , RDA0 , RDA1 ,
+		output logic [9:0] Q0 , Q1
 );
 
 	//ENR1 IS ALWAYS 1'B1
 	
-	logic [9:0] R0, R1, R2, R3;
+	logic [9:0] Reg [3:0];
 	
 	//reading data and save to register
 	always_ff@(negedge(CLKb))
 	begin
 		if(ENW) //if write is trigger
 		begin
-			case(WRA)
-				2'b00: R0 <= D;
-				2'b01: R1 <= D;
-				2'b10: R2 <= D;
-				2'b11: R3 <= D;
-			endcase
+				2'b00: Reg[0] <= D;
 		end
-		else
-			WRA = 0;
 	end
 	
 	
@@ -54,18 +47,18 @@ output logic [9:0] Q0 , Q1
 	begin
 		
 		case({ENR0, RDA0}) //to Q0
-			2'b00: Q0 = R0;
-			2'b01: Q0 = R1;
-			2'b10: Q0 = R2;
-			2'b11: Q0 = R3;
+			(1'b1, 2'b00): Q0 = Reg[0];
+			(1'b1, 2'b01): Q0 = Reg[1];
+			(1'b1, 2'b10): Q0 = Reg[2];
+			(1'b1, 2'b11): Q0 = Reg[3];
 			default: Q0 = 0;
 		endcase
 		
 		case({ENR1, RDA1}) //to Q1
-			2'b00: Q1 = R0;
-			2'b01: Q1 = R1;
-			2'b10: Q1 = R2;
-			2'b11: Q1 = R3;
+			(1'b1, 2'b00): Q1 = Reg[0];
+			(1'b1, 2'b01): Q1 = Reg[1];
+			(1'b1, 2'b10): Q1 = Reg[2];
+			(1'b1, 2'b11): Q1 = Reg[3];
 		endcase
 	end
 	
