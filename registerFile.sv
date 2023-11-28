@@ -26,7 +26,8 @@ module registerFile (
 		input logic [9:0] D ,
 		input logic ENW , ENR0 , ENR1 , CLKb ,
 		input logic [1:0] WRA , RDA0 , RDA1 ,
-		output logic [9:0] Q0 , Q1
+		output logic [9:0] Q0 ,
+		output logic [9:0] Q1
 );
 
 	//ENR1 IS ALWAYS 1'B1
@@ -38,7 +39,7 @@ module registerFile (
 	begin
 		if(ENW) //if write is trigger
 		begin
-				2'b00: Reg[0] <= D;
+			Reg[WRA] <= D;
 		end
 	end
 	
@@ -47,18 +48,18 @@ module registerFile (
 	begin
 		
 		case({ENR0, RDA0}) //to Q0
-			(1'b1, 2'b00): Q0 = Reg[0];
-			(1'b1, 2'b01): Q0 = Reg[1];
-			(1'b1, 2'b10): Q0 = Reg[2];
-			(1'b1, 2'b11): Q0 = Reg[3];
+			{1'b1, 2'b00}: Q0 = Reg[0];
+			{1'b1, 2'b01}: Q0 = Reg[1];
+			{1'b1, 2'b10}: Q0 = Reg[2];
+			{1'b1, 2'b11}: Q0 = Reg[3];
 			default: Q0 = 0;
 		endcase
 		
 		case({ENR1, RDA1}) //to Q1
-			(1'b1, 2'b00): Q1 = Reg[0];
-			(1'b1, 2'b01): Q1 = Reg[1];
-			(1'b1, 2'b10): Q1 = Reg[2];
-			(1'b1, 2'b11): Q1 = Reg[3];
+			{1'b1, 2'b00}: Q1 = Reg[0];
+			{1'b1, 2'b01}: Q1 = Reg[1];
+			{1'b1, 2'b10}: Q1 = Reg[2];
+			{1'b1, 2'b11}: Q1 = Reg[3];
 		endcase
 	end
 	
