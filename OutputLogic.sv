@@ -31,7 +31,7 @@ module OutputLogic(
 	
 	output logic [9:0] LED_B,
 	output logic [6:0] DHEX0, DHEX1, DHEX2,
-	output logic [7:0], THEX
+	output logic [7:0] THEX
 );
 
 	logic [9:0] outLogic;
@@ -52,8 +52,8 @@ module OutputLogic(
 	
 	seven_seg digit0(.s(DHEX0) , .a(outLogic[3:0]));
 	seven_seg digit1(.s(DHEX1) , .a(outLogic[7:4]));
-	seven_seg digit2(.s(DHEX2) , .a({2'b00, outLogic[9:8])});
-	seven_seg Timestep(.s(THEX) , .a({2'b00, TIME));
+	seven_seg digit2(.s(DHEX2) , .a({2'b00, outLogic[9:8]}));
+	seven_seg Timestep(.s(THEX) , .a({2'b00, TIME}));
 	
 	assign THEX [7] = DONE;
 
