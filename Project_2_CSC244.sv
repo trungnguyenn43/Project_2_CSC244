@@ -1,7 +1,7 @@
 /*
 Module: Top level module for project 2
 Created 11/17/2023
-Last updated: 
+Last updated: 11/27/2023
 
 INSTRUCTION FOR PIN ASSIGN
 
@@ -14,8 +14,10 @@ Inputs:
 Outputs:
 	OUT_DATA_BUS = LEDR[9:0]
 	DHEX [2:0] = HEX2:0 //ignore DHEX[0], DHEX[1], and DHEX[2] in pin assign table
-	THEX = timestep HEX5
+	THEX = HEX5
 	Done = the dot on HEX5 = PIN_L19
+	
+	
 	
 */
 
@@ -26,45 +28,48 @@ module Project_2_CSC244(
 	input logic CLK, CLK50MHz, PKb,
 	
 	output logic [9:0] OUT_DATA_BUS,
-	output logic [6:0] DHEX [2:0], //this is an array, like this DHEX[0][0]
-	output logic [6:0] THEX,
-	output logic Done
+	output logic [6:0] DHEX0, DHEX1, DHEX2,
+	output logic [7:0] THEX
 
 );
+
+	//internal wires
+	logic [9:0] BUS, INSTR, REG;
+	logic [1:0] TIME;
+	logic Ext, IRin, Clr, ENW, ENR, Ain, Gin, Gout;
+	logic [1:0] WRA, RDA0, RDA1;
+	logic [3:0] ALUcont;
 	
-	//Data bus
-	logic [9:0] BUS;
 	
 	
-	
-	/*Debouncer - Quick copy:
-		debouncer (.A(), .A_noisy(), .CLK50M());
-	*/
 	logic CLKDb; //CLK after debounced
 	debouncer CLKDebouncer(.A(CLKDb), .A_noisy(CLK), .CLK50M(CLK50MHz))
 
 	logic PKdb; //PKdb -> peek
 	debouncer PKDebouncer(.A(PKdb), .A_noisy(PKb), .CLK50M(CLK50MHz));
 	
+	//tri-state buffer
+	tBuffer buffboi(.Q(BUS), .E(Ext), .D(IN_DATA_BUS));
 	
-	logic [9:0] IMM;
-	logic [1:0] Rin;
-	logic [1:0] Rout;
-	logic [3:0] ALUcont;
-	logic ENW, ENR, Ain, Gin, Gout, Ext, IRin, Clr;
+	//instr register
+	reg10 instr(.Q(INSTR), .EN(IRin), .CLKb(CLKb), .D(BUS));
 	
+	//counter
+	upcount2 count(.CNT(TIME), .CLR(Clr), .CLKb(CLKb));
 	
+	//controller
+	controller cont(.IMM(BUS), .Rin(WRA), .Rout(RDA0), .ENW(ENW), .ENR(ENR0), .Ain(Ain), .Gin(Gin), .Gout(Gout), .ALUcont(ALUcont), .Ext(Ext), .IRin(IRin), .Clr(Clr), .INSTR(INSTR), .T(TIME));
 	
-	/* Multistage ALU - Quick copy
-		ALU(.RES(), .Ain(), .Gin(), .Gout(), .CLKb(), .FN(), .OP());
-	*/
-	ALU(.RES(OP), .Ain(Ain), .Gin(Gin), .Gout(Gout), .CLKb(CLKDb), .FN(ALUcont), .OP(OP));
+	//register file
+	registerFile reggie(.Q0(BUS), .Q1(REG), .D(BUS), .WRA(WRA), .ENW(ENW), .RDA(RDA0), .ENR0(ENR0), .RDA1(IN_DATA_BUS[1:0]), ENR1(1), .CLKb(CLKb));
 	
+	//alu
+	multiStageALU alulululu(.RES(BUS), .OP(BUS), .Ain(Ain), .Gin(Gin), .Gout(.Gout), .FN(ALUcont));
 	
-	
-	/* Output module - Quick copy:
-		OutputLogic(.LED_B() , .DHEX(), .THEX(), .LED_D(), .BUS(), .REG(), .TIME(), .PEEKb(), .DONE());
-	*/
-	OutputLogic(.LED_B(OUT_DATA_BUS) , .DHEX(DHEX), .THEX(THEX), .LED_D(), .BUS(BUS), .REG(), .TIME(), .PEEKb(PKdb), .DONE(Done));
+	//output
+	OutputLogic(.LED_B(OUT_DATA_BUS), .DHEX0(DHEX0), .DHEX1(DHEX1), .DHEX2(DHEX2), .THEX(THEX), .BUS(BUS), .REG(Q1), .TIME(TIME), .PEEKb(PKdb), .DONE(Clr));
+
+
+endmodule
 
 endmodule
