@@ -71,7 +71,7 @@ module MultiStageALU#(
 			{2'b00, ASR}: temp = A >>> B;
 			{2'b10, 1'b?}: temp = A + OP[5:0];
 			{2'b11, 1'b?}: temp = A - OP[5:0];
-			default: temp = 10'd0;
+			default: temp = 10'bZZZZZZZZZZ;
 				
 		endcase		
 	end

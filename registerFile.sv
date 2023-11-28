@@ -52,7 +52,7 @@ module registerFile (
 			{1'b1, 2'b01}: Q0 = Reg[1];
 			{1'b1, 2'b10}: Q0 = Reg[2];
 			{1'b1, 2'b11}: Q0 = Reg[3];
-			default: Q0 = 0;
+			default: Q0 = 10'bZZZZZZZZZZ;
 		endcase
 		
 		case({ENR1, RDA1}) //to Q1
@@ -60,7 +60,7 @@ module registerFile (
 			{1'b1, 2'b01}: Q1 = Reg[1];
 			{1'b1, 2'b10}: Q1 = Reg[2];
 			{1'b1, 2'b11}: Q1 = Reg[3];
-			default:	Q1 = 0;
+			default:	Q1 = 10'bZZZZZZZZZZ;
 		endcase
 	end
 	
