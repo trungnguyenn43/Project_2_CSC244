@@ -71,5 +71,3 @@ module Project_2_CSC244(
 
 
 endmodule
-
-endmodule
