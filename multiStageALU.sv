@@ -16,10 +16,10 @@ Out:
 	[N-1:0] Q = data bus out signals 
 
 Quick copy:
-ALU(.RES(), .Ain(), .Gin(), .Gout(), .CLKb(), .FN(), .OP());
+MultiStageALU(.RES(), .Ain(), .Gin(), .Gout(), .CLKb(), .FN(), .OP());
 */
 
-module ALU#(
+module MultiStageALU#(
 	parameter N = 10
 )
 (
