@@ -46,22 +46,37 @@ module registerFile (
 	
 	always_comb
 	begin
+	
+		if(ENR0)
+		begin
+			Q0 = Reg[RDA0];
+		end
+		else
+			Q0 = 10'bZZZZZZZZZZ;
+
+		if(ENR1)
+		begin
+			Q1 = Reg[RDA1];
+		end
+		else
+			Q1 = 10'bZZZZZZZZZZ;
 		
-		case({ENR0, RDA0}) //to Q0
+		/* case({ENR0, RDA0}) //to Q0
 			{1'b1, 2'b00}: Q0 = Reg[0];
 			{1'b1, 2'b01}: Q0 = Reg[1];
 			{1'b1, 2'b10}: Q0 = Reg[2];
 			{1'b1, 2'b11}: Q0 = Reg[3];
 			default: Q0 = 10'bZZZZZZZZZZ;
 		endcase
-		
+
 		case({ENR1, RDA1}) //to Q1
 			{1'b1, 2'b00}: Q1 = Reg[0];
 			{1'b1, 2'b01}: Q1 = Reg[1];
 			{1'b1, 2'b10}: Q1 = Reg[2];
 			{1'b1, 2'b11}: Q1 = Reg[3];
 			default:	Q1 = 10'bZZZZZZZZZZ;
-		endcase
+		endcase */
+
 	end
 	
 

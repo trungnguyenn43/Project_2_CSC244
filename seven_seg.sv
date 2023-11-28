@@ -10,7 +10,7 @@ In:
 Out:
 	out_sig = signals out to 7seg display
 	out_enable = out signal for the dot on 7seg display
-
+ 
 Quick copy:
 seven_seg(.out_sig() , .a());
 */

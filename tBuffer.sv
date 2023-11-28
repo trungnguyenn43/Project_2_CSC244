@@ -9,7 +9,7 @@ module tBuffer(
 		if(E)
 			Q = D;
 		else
-			Q = 10'bz;
+			Q = 10'bZZZZZZZZZZ;
 	end
 
 

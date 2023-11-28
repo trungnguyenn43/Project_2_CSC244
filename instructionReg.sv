@@ -25,7 +25,7 @@ module instructionReg#(
 	output logic [N-1:0] Q
 );
 
-	always_ff@(negedge CLKb)
+	always_ff@(negedge (CLKb))
 	begin 
 		if(E)
 			Q <= D;

@@ -34,13 +34,13 @@ module Project_2_CSC244(
 );
 
 	//internal wires
-	logic [9:0] BUS, INSTR, REG;
+	wire [9:0] BUS;
+	logic [9:0] INSTR;
+	logic [9:0] REG_sig;
 	logic [1:0] TIME;
 	logic Ext, IRin, Clr, ENW, ENR, Ain, Gin, Gout;
 	logic [1:0] WRA, RDA0, RDA1;
 	logic [3:0] ALUcont;
-	
-	
 	
 	logic CLKDb; //CLK after debounced
 	debouncer CLKDebouncer(.A(CLKDb), .A_noisy(CLK), .CLK50M(CLK50MHz));
@@ -61,13 +61,13 @@ module Project_2_CSC244(
 	controller cont(.IMM(BUS), .Rin(WRA), .Rout(RDA0), .ENW(ENW), .ENR(ENR0), .Ain(Ain), .Gin(Gin), .Gout(Gout), .ALUcont(ALUcont), .Ext(Ext), .IRin(IRin), .Clr(Clr), .INSTR(INSTR), .T(TIME));
 	
 	//register file
-	registerFile reggie(.Q0(BUS), .Q1(REG), .D(BUS), .WRA(WRA), .ENW(ENW), .RDA0(RDA0), .ENR0(ENR0), .RDA1(IN_DATA_BUS[1:0]), .ENR1(1'b1), .CLKb(CLKDb));
+	registerFile reggie(.Q0(BUS), .Q1(REG_sig), .D(BUS), .WRA(WRA), .ENW(ENW), .RDA0(RDA0), .ENR0(ENR0), .RDA1(IN_DATA_BUS[1:0]), .ENR1(1'b1), .CLKb(CLKDb));
 	
 	//alu
 	MultiStageALU alulululu(.RES(BUS), .OP(BUS), .Ain(Ain), .Gin(Gin), .Gout(Gout), .FN(ALUcont));
 	
 	//output
-	OutputLogic(.LED_B(OUT_DATA_BUS), .DHEX0(DHEX0), .DHEX1(DHEX1), .DHEX2(DHEX2), .THEX(THEX), .BUS(BUS), .REG(Q1), .TIME(TIME), .PEEKb(PKdb), .DONE(Clr));
-
+	OutputLogic(.LED_B(OUT_DATA_BUS), .DHEX0(DHEX0), .DHEX1(DHEX1), .DHEX2(DHEX2), .THEX(THEX), .BUS(BUS), .REG(REG_sig), .TIME(TIME), .PEEKb(PKdb), .DONE(Clr));
+	
 
 endmodule

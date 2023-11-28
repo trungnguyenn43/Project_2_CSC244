@@ -87,7 +87,7 @@ module MultiStageALU#(
 		if(Gout)
 			RES <= G;
 		else
-			RES <= 10'd0;
+			RES <= 10'bZZZZZZZZZZ;
 	
 	
 	
