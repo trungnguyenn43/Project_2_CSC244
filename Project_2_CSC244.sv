@@ -35,6 +35,8 @@ module Project_2_CSC244(
 	//Data bus
 	logic [9:0] BUS;
 	
+	
+	
 	/*Debouncer - Quick copy:
 		debouncer (.A(), .A_noisy(), .CLK50M());
 	*/
@@ -43,6 +45,21 @@ module Project_2_CSC244(
 
 	logic PKdb; //PKdb -> peek
 	debouncer PKDebouncer(.A(PKdb), .A_noisy(PKb), .CLK50M(CLK50MHz));
+	
+	
+	logic [9:0] IMM;
+	logic [1:0] Rin;
+	logic [1:0] Rout;
+	logic [3:0] ALUcont;
+	logic ENW, ENR, Ain, Gin, Gout, Ext, IRin, Clr;
+	
+	
+	
+	/* Multistage ALU - Quick copy
+		ALU(.RES(), .Ain(), .Gin(), .Gout(), .CLKb(), .FN(), .OP());
+	*/
+	ALU(.RES(OP), .Ain(Ain), .Gin(Gin), .Gout(Gout), .CLKb(CLKDb), .FN(ALUcont), .OP(OP));
+	
 	
 	
 	/* Output module - Quick copy:
