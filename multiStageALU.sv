@@ -45,20 +45,21 @@ module MultiStageALU#(
 	logic [N-1:0] B; //B
 	logic [N-1:0] G; //ressult
 	logic [N-1:0] temp; //temp ressult
-	logic [N-1:0] IMM_VAL;
-	assign IMM_VAL[5:0] = OP[5:0];
+	
 	
 	always_ff@(negedge(CLKb))
 		if(Ain)
 			A <= OP; //store A
 		else
-			A <= 0;
+			A <= A;
 		
 	always_comb 
 	begin
+	
 		//ALU cases mux for OP 00
-		case({OP[N-1:N-2], FN})
-		
+		//WE ARE NOT TAKING OP CODES BRO
+		/*case({OP[N-1:N-2], FN})
+			
 			{2'b00, ADD}: temp = A + B;
 			{2'b00, SUB}: temp = A - B;
 			{2'b00, INV}: temp = (~A) + 1;
@@ -72,22 +73,41 @@ module MultiStageALU#(
 			{2'b10, 1'b?}: temp = A + OP[5:0];
 			{2'b11, 1'b?}: temp = A - OP[5:0];
 			default: temp = 10'bZZZZZZZZZZ;
-				
-		endcase		
+			
+			
+		endcase	
+	*/
+		case(FN)
+			
+			ADD: temp = A + B;
+			SUB: temp = A - B;
+			INV: temp = (~A) + 1;
+			FLP: temp = ~A;
+			AND: temp = A & B;
+			OR: temp = A | B;
+			XOR: temp = A ^ B;
+			LSL: temp = A << B;
+			LSR: temp = A >> B;
+			ASR: temp = A >>> B;
+			
+			default: temp = 10'bZZZZZZZZZZ;
+			
+			
+		endcase	
 	end
 	
-	
+	//save result
 	always_ff@(negedge(CLKb))
 		if(Gin)
 			G <= temp;
 		else
-			G = G;
+			G <= G;
 	
 	always_comb //send out result
 		if(Gout)
-			RES <= G;
+			RES = temp;
 		else
-			RES <= 10'bZZZZZZZZZZ;
+			RES = 10'bZZZZZZZZZZ;
 	
 	
 	
