@@ -58,10 +58,10 @@ module Project_2_CSC244(
 	upcount2 count(.CNT(TIME), .CLR(Clr), .CLKb(CLKDb));
 	
 	//controller
-	controller cont(.IMM(BUS), .Rin(WRA), .Rout(RDA0), .ENW(ENW), .ENR(ENR0), .Ain(Ain), .Gin(Gin), .Gout(Gout), .ALUcont(ALUcont), .Ext(Ext), .IRin(IRin), .Clr(Clr), .INSTR(INSTR), .T(TIME));
+	controller cont(.IMM(BUS), .Rin(WRA), .Rout(RDA0), .ENW(ENW), .ENR(ENR), .Ain(Ain), .Gin(Gin), .Gout(Gout), .ALUcont(ALUcont), .Ext(Ext), .IRin(IRin), .Clr(Clr), .INSTR(INSTR), .T(TIME));
 	
 	//register file
-	registerFile reggie(.Q0(BUS), .Q1(REG_sig), .D(BUS), .WRA(WRA), .ENW(ENW), .RDA0(RDA0), .ENR0(ENR0), .RDA1(IN_DATA_BUS[1:0]), .ENR1(1'b1), .CLKb(CLKDb));
+	registerFile reggie(.Q0(BUS), .Q1(REG_sig), .D(BUS), .WRA(WRA), .ENW(ENW), .RDA0(RDA0), .ENR0(ENR), .RDA1(IN_DATA_BUS[1:0]), .ENR1(1'b1), .CLKb(CLKDb));
 	
 	//alu
 	MultiStageALU alulululu(.RES(BUS), .OP(BUS), .Ain(Ain), .Gin(Gin), .Gout(Gout), .FN(ALUcont));
