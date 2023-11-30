@@ -30,56 +30,26 @@ module registerFile (
 		output logic [9:0] Q1
 );
 
-	//ENR1 IS ALWAYS 1'B1
+	logic [9:0] Reg [3:0]; //4 10-bit registers
 	
-	logic [9:0] Reg [3:0];
-	
-	//reading data and save to register
+	// Saving data to register
 	always_ff@(negedge(CLKb))
 	begin
-		if(ENW) //if write is trigger
+		if(ENW) //if write is enabled
 		begin
-			Reg[WRA] <= D;
+			Reg[WRA] <= D; //write to register @ address
 		end
 	end
-	
-	
-	always_comb
-	begin
-	
-	/*
-		if(ENR0)
-		begin
-			Q0 = Reg[RDA0];
-		end
+	// Reading data from register
+	always_comb begin
+		if(ENR0) //if read is enabled
+			Q0 = Reg[RDA0]; //read from register @ address
 		else
-			Q0 = 10'bZZZZZZZZZZ;
-
-		if(ENR1)
-		begin
-			Q1 = Reg[RDA1];
-		end
+			Q0= 10'bz;
+		if(ENR1) //ENR1 is always on
+			Q1= Reg[RDA1]; //read from register @ address
 		else
-			Q1 = 10'bZZZZZZZZZZ;
-			*/
-		
-		 case({ENR0, RDA0}) //to Q0
-			{1'b1, 2'b00}: Q0 = Reg[0];
-			{1'b1, 2'b01}: Q0 = Reg[1];
-			{1'b1, 2'b10}: Q0 = Reg[2];
-			{1'b1, 2'b11}: Q0 = Reg[3];
-			default: Q0 = 10'bZZZZZZZZZZ;
-		endcase
-
-		case({ENR1, RDA1}) //to Q1
-			{1'b1, 2'b00}: Q1 = Reg[0];
-			{1'b1, 2'b01}: Q1 = Reg[1];
-			{1'b1, 2'b10}: Q1 = Reg[2];
-			{1'b1, 2'b11}: Q1 = Reg[3];
-			default:	Q1 = 10'bZZZZZZZZZZ;
-		endcase 
-
-	end
+			Q1= 10'bz;
+	end		
 	
-
 endmodule
