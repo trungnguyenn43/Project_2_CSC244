@@ -8,14 +8,13 @@ module controller(
 	output logic Ext, IRin, Clr
 );
 
-	logic sigBit;
-	assign sigBit= INSTR[9];
 	logic [3:0] FN;
 	assign FN= INSTR[3:0];
 	logic [1:0] rx, ry;
 	assign rx = INSTR[7:6];
 	assign ry = INSTR[5:4];
-	
+	logic [5:0] IMMV;
+	assign IMMV= INSTR[5:0];
 	parameter
 		LOAD = 4'b0000,
 		COPY = 4'b0001,
@@ -44,109 +43,105 @@ module controller(
 			end
 			//2ND TS
 			2'b01: begin
-				
-				if(sigBit) begin
+				if(INSTR[9]) begin
 					ENR= 1;
 					Ain= 1;
 					Rout= rx;
 				end
 				else begin
-				case(FN)
-					LOAD: 
-					begin					
-						Ext= 1; Rin= rx; ENW= 1; Clr= 1;
-					end
-					COPY: 
-					begin
-						Rout= ry; Rin= rx; ENW= 1;	ENR= 1; Clr= 1;
-					end
-					INV, FLP: 
-					begin
-						Rout= ry; ENR= 1; Gin= 1;
-						if(INV)
-							ALUcont= INV;
-						else
-							ALUcont= FLP;
-					end
-					ADD, SUB, AND, OR, XOR, LSL, LSR, ASR: 
-					begin
-						Rout= rx; ENR= 1; Ain= 1; 
-					end
-				endcase
+					case(FN)
+						LOAD: 
+						begin					
+							Ext= 1; Rin= rx; ENW= 1; Clr= 1;
+						end
+						COPY: 
+						begin
+							Rout= ry; Rin= rx; ENW= 1;	ENR= 1; Clr= 1;
+						end
+						INV, FLP: 
+						begin
+							Rout= ry; ENR= 1; Gin= 1;
+							if(INV)
+								ALUcont= INV;
+							else
+								ALUcont= FLP;
+						end
+						ADD, SUB, AND, OR, XOR, LSL, LSR, ASR: 
+						begin
+							Rout= rx; ENR= 1; Ain= 1; 
+						end
+					endcase
 				end
 			end
 			//3RD TS
+			//LOAD & COPY NEVER GET HERE
 			2'b10: begin
-				//LOAD & COPY SHOULD NEVER GET 
-				//TO THE 3RD OR 4TH CLOCK PULSE
-				
-				if(sigBit) begin
+				if(INSTR[9]) begin
 					Gin= 1;
-					IMM= {4'b0, INSTR[5:0]};
+					IMM= {4'b0, IMMV};
 					if(INSTR[8])
 						ALUcont= SUB;
 					else
 						ALUcont= ADD;
 				end
-				case(FN)
-					ADD:
-					begin
-						Rout= ry; ENR= 1; Gin= 1;
-						ALUcont= ADD;
-					end
-					SUB:
-					begin
-						Rout= ry; ENR= 1; Gin= 1;
-						ALUcont= SUB;
-					end
-					AND:
-					begin
-						Rout= ry; ENR= 1; Gin= 1;
-						ALUcont= AND;
-					end
-					OR:
-					begin
-						Rout= ry; ENR= 1; Gin= 1;
-						ALUcont= OR;
-					end
-					XOR:
-					begin
-						Rout= ry; ENR= 1; Gin= 1;
-						ALUcont= XOR;
-					end
-					LSL:
-					begin
-						Rout= ry; ENR= 1; Gin= 1;
-						ALUcont= LSL;
-					end
-					LSR:
-					begin
-						Rout= ry; ENR= 1; Gin= 1;
-						ALUcont= LSR;
-					end
-					ASR:
-					begin
-						Rout= ry; ENR= 1; Gin= 1;
-						ALUcont= ASR;
-					end
-					INV, FLP:
-					begin
-						Rin= rx; ENW= 1; Gout= 1; Clr= 1;
-					end
-				endcase
-				
+				else begin
+					case(FN)
+						ADD:
+						begin
+							Rout= ry; ENR= 1; Gin= 1;
+							ALUcont= ADD;
+						end
+						SUB:
+						begin
+							Rout= ry; ENR= 1; Gin= 1;
+							ALUcont= SUB;
+						end
+						AND:
+						begin
+							Rout= ry; ENR= 1; Gin= 1;
+							ALUcont= AND;
+						end
+						OR:
+						begin
+							Rout= ry; ENR= 1; Gin= 1;
+							ALUcont= OR;
+						end
+						XOR:
+						begin
+							Rout= ry; ENR= 1; Gin= 1;
+							ALUcont= XOR;
+						end
+						LSL:
+						begin
+							Rout= ry; ENR= 1; Gin= 1;
+							ALUcont= LSL;
+						end
+						LSR:
+						begin
+							Rout= ry; ENR= 1; Gin= 1;
+							ALUcont= LSR;
+						end
+						ASR:
+						begin
+							Rout= ry; ENR= 1; Gin= 1;
+							ALUcont= ASR;
+						end
+						INV, FLP:
+						begin
+							Rin= rx; ENW= 1; Gout= 1; Clr= 1;
+						end
+					endcase
+				end
 			end
 			//4TH TS
+			//FLP & INV NEVER GET HERE
 			2'b11: begin
 				Gout= 1;
 				Rin= rx;
 				ENW= 1;
 				Clr= 1;
 			end
-			
 		endcase
-	
-	
 	end
-	
 endmodule 
+
