@@ -64,7 +64,7 @@ module Project_2_CSC244(
 	registerFile reggie(.Q0(BUS), .Q1(REG), .D(BUS), .WRA(WRA), .ENW(ENW), .RDA0(RDA0), .ENR0(ENR), .RDA1(IN_DATA_BUS[1:0]), .ENR1(1), .CLKb(CLKDb));
 	
 	//alu
-	multiStageALU alulu(.RES(BUS), .OP(BUS), .Ain(Ain), .Gin(Gin), .Gout(Gout), .CLKb(CLKDb), .FN(ALUcont));
+	MultiStageALU alulu(.RES(BUS), .OP(BUS), .Ain(Ain), .Gin(Gin), .Gout(Gout), .CLKb(CLKDb), .FN(ALUcont));
 	
 	//output
 	OutputLogic(.LED_B(OUT_DATA_BUS), .DHEX0(DHEX0), .DHEX1(DHEX1), .DHEX2(DHEX2), .THEX(THEX), .BUS(BUS), .REG(REG), .TIME(TIME), .PEEKb(PKdb), .DONE(Clr));
