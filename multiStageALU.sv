@@ -42,10 +42,10 @@ module MultiStageALU#(
 	parameter ASR = 4'b1011;
 	
 	logic [N-1:0] A; //A
-	logic [N-1:0] B; //B
 	logic [N-1:0] G; //ressult
 	logic [N-1:0] temp; //temp ressult
 	
+	//assign B = OP;
 	
 	always_ff@(negedge(CLKb))
 		if(Ain)
@@ -57,42 +57,21 @@ module MultiStageALU#(
 	begin
 	
 		//ALU cases mux for OP 00
-		//WE ARE NOT TAKING OP CODES BRO
-		/*case({OP[N-1:N-2], FN})
-			
-			{2'b00, ADD}: temp = A + B;
-			{2'b00, SUB}: temp = A - B;
-			{2'b00, INV}: temp = (~A) + 1;
-			{2'b00, FLP}: temp = ~A;
-			{2'b00, AND}: temp = A & B;
-			{2'b00, OR}: temp = A | B;
-			{2'b00, XOR}: temp = A ^ B;
-			{2'b00, LSL}: temp = A << B;
-			{2'b00, LSR}: temp = A >> B;
-			{2'b00, ASR}: temp = A >>> B;
-			{2'b10, 1'b?}: temp = A + OP[5:0];
-			{2'b11, 1'b?}: temp = A - OP[5:0];
-			default: temp = 10'bZZZZZZZZZZ;
-			
-			
-		endcase	
-	*/
+		temp= 10'b0;
 		case(FN)
 			
-			ADD: temp = A + B;
-			SUB: temp = A - B;
+			ADD: temp = A + OP;
+			SUB: temp = A - OP;
 			INV: temp = (~A) + 1;
 			FLP: temp = ~A;
-			AND: temp = A & B;
-			OR: temp = A | B;
-			XOR: temp = A ^ B;
-			LSL: temp = A << B;
-			LSR: temp = A >> B;
-			ASR: temp = A >>> B;
+			AND: temp = A & OP;
+			OR: temp = A | OP;
+			XOR: temp = A ^ OP;
+			LSL: temp = A << OP;
+			LSR: temp = A >> OP;
+			ASR: temp = $signed(A) >>> OP;
 			
 			default: temp = 10'bZZZZZZZZZZ;
-			
-			
 		endcase	
 	end
 	
@@ -107,7 +86,7 @@ module MultiStageALU#(
 		if(Gout)
 			RES = temp;
 		else
-			RES = 10'bZZZZZZZZZZ;
+			RES = 10'bz;
 	
 	
 	
