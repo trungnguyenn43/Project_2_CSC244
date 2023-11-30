@@ -35,7 +35,6 @@ module MultiStageALU#(
 	parameter FLP = 4'b0101;
 	parameter AND = 4'b0110;
 	parameter OR = 4'b0111;
-	
 	parameter XOR = 4'b1000;
 	parameter LSL = 4'b1001;
 	parameter LSR = 4'b1010;
@@ -43,51 +42,51 @@ module MultiStageALU#(
 	
 	logic [N-1:0] A; //A
 	logic [N-1:0] G; //ressult
-	logic [N-1:0] temp; //temp ressult
-	
-	//assign B = OP;
+	logic [N-1:0] _RES; //temp result
+	//logic [9:0] _FN;
+	//reg10 storeA(.Q(A), .D(OP), .E(Ain), .CLKb(CLKb));
+	//reg10 storeG(.Q(_G), .D(_RES), .E(Gin), .CLKb(CLKb));
+	//reg10 gout(.Q(RES), .D(_G), .E(Gout), .CLKb(CLKb));
 	
 	always_ff@(negedge(CLKb))
 		if(Ain)
 			A <= OP; //store A
 		else
 			A <= A;
-		
+			
 	always_comb 
 	begin
-	
+		
+		//temp= 10'dz;
 		//ALU cases mux for OP 00
-		temp= 10'b0;
 		case(FN)
 			
-			ADD: temp = A + OP;
-			SUB: temp = A - OP;
-			INV: temp = (~A) + 1;
-			FLP: temp = ~A;
-			AND: temp = A & OP;
-			OR: temp = A | OP;
-			XOR: temp = A ^ OP;
-			LSL: temp = A << OP;
-			LSR: temp = A >> OP;
-			ASR: temp = $signed(A) >>> OP;
+			ADD: _RES = A + OP;
+			SUB: _RES = A - OP;
+			INV: _RES = (~A) + 1;
+			FLP: _RES = ~A;
+			AND: _RES = A & OP;
+			OR: _RES = A | OP;
+			XOR: _RES = A ^ OP;
+			LSL: _RES = A << OP;
+			LSR: _RES = A >> OP;
+			ASR: _RES = $signed(A) >>> OP;
 			
-			default: temp = 10'bZZZZZZZZZZ;
+			default: _RES = 10'bz;
+			
 		endcase	
 	end
 	
-	//save result
 	always_ff@(negedge(CLKb))
 		if(Gin)
-			G <= temp;
+			G <= _RES;
 		else
 			G <= G;
 	
 	always_comb //send out result
-		if(Gout)
-			RES = temp;
+		if(Gout == 1'b1)
+			RES = G;
 		else
-			RES = 10'bz;
-	
-	
+			RES = 10'dz;
 	
 endmodule 
