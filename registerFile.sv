@@ -1,7 +1,7 @@
 /*
 Module name: instructionReg
 Description: store instruction signal
-By: Leo Ostiga
+By: Norman
 Date: 11/17/2023
 
 In: 
