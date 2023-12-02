@@ -1,7 +1,7 @@
 /*
 Module name: ALU
 Description: multi stage ALU
-By: Norman Nguyen & Leo Ostiga
+By: Norman Nguyen
 Date: 11/3/2023
 
 In: 

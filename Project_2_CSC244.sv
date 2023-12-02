@@ -17,8 +17,6 @@ Outputs:
 	THEX = HEX5
 	Done = the dot on HEX5 = PIN_L19
 	
-	
-	
 */
 
 

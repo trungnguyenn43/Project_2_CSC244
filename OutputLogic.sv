@@ -1,7 +1,7 @@
 /*
 Module name: outputlogic
 Description: output logic for the project
-By: 
+By: Leo and Norman
 Created: 11/17/2023
 Updated: 11/27/2023
 

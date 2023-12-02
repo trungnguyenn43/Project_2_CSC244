@@ -1,6 +1,6 @@
 /*
-Module name: instructionReg
-Description: store instruction signal
+Module name: registerFile
+Description: register file
 By: Norman
 Date: 11/17/2023
 

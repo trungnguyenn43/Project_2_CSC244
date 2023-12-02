@@ -1,3 +1,18 @@
+/*
+Module name: controller
+Description: control the enable signal
+By: Leo
+Date: 11/24/2023
+
+In: 
+	
+Out:
+	
+
+Quick copy:
+
+*/
+
 module controller(
 	input logic [9:0] INSTR,
 	input logic [1:0] T,
